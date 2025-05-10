@@ -26,70 +26,84 @@ Space Complexity: O(L) for the recursion stack
 """
 
 def exist(board: list[list[str]], word: str) -> bool:
+    """
+    Check if the word exists in the board by connecting adjacent characters.
+    
+    Args:
+        board: 2D list of characters
+        word: Word to search for
+        
+    Returns:
+        True if word exists, False otherwise
+    """
     if not board or not word:
         return False
+        
+    rows, cols = len(board), len(board[0])
     
-    m, n = len(board), len(board[0])
-    
-    def dfs(i: int, j: int, word_index: int) -> bool:
-        # Base case: found the word
-        if word_index == len(word):
+    def dfs(r: int, c: int, index: int) -> bool:
+        # If we've found all characters in the word
+        if index == len(word):
             return True
-        
-        # Check boundaries and character match
-        if (i < 0 or i >= m or j < 0 or j >= n or 
-            board[i][j] != word[word_index]):
+            
+        # Check if current position is valid
+        if (r < 0 or r >= rows or c < 0 or c >= cols or 
+            board[r][c] != word[index]):
             return False
-        
+            
         # Mark current cell as visited
-        temp = board[i][j]
-        board[i][j] = '#'
+        temp = board[r][c]
+        board[r][c] = '#'
         
-        # Try all four directions
-        found = (dfs(i + 1, j, word_index + 1) or
-                dfs(i - 1, j, word_index + 1) or
-                dfs(i, j + 1, word_index + 1) or
-                dfs(i, j - 1, word_index + 1))
-        
+        # Check all four directions
+        found = (dfs(r+1, c, index+1) or dfs(r-1, c, index+1) or
+                dfs(r, c+1, index+1) or dfs(r, c-1, index+1))
+                
         # Restore the cell
-        board[i][j] = temp
+        board[r][c] = temp
         
         return found
     
     # Try starting from each cell
-    for i in range(m):
-        for j in range(n):
-            if dfs(i, j, 0):
+    for r in range(rows):
+        for c in range(cols):
+            if dfs(r, c, 0):
                 return True
-    
+                
     return False
 
-# Test cases
-def test_word_search():
-    # Test case 1: Basic case
+# Example usage
+if __name__ == "__main__":
+    # Test case 1
     board1 = [
         ["A","B","C","E"],
         ["S","F","C","S"],
         ["A","D","E","E"]
     ]
-    assert exist(board1, "ABCCED") == True
+    word1 = "ABCCED"
+    print(f"Input: board = {board1}, word = {word1}")
+    print(f"Output: {exist(board1, word1)}")  # Expected: True
     
-    # Test case 2: Word exists
+    # Test case 2
     board2 = [
         ["A","B","C","E"],
         ["S","F","C","S"],
         ["A","D","E","E"]
     ]
-    assert exist(board2, "SEE") == True
+    word2 = "SEE"
+    print(f"\nInput: board = {board2}, word = {word2}")
+    print(f"Output: {exist(board2, word2)}")  # Expected: True
     
-    # Test case 3: Word doesn't exist
+    # Test case 3
     board3 = [
         ["A","B","C","E"],
         ["S","F","C","S"],
         ["A","D","E","E"]
     ]
-    assert exist(board3, "ABCB") == False
-    
+    word3 = "ABCB"
+    print(f"\nInput: board = {board3}, word = {word3}")
+    print(f"Output: {exist(board3, word3)}")  # Expected: False
+
     # Test case 4: Empty board
     assert exist([], "A") == False
     
@@ -103,7 +117,4 @@ def test_word_search():
     board4 = [["A"]]
     assert exist(board4, "AB") == False
     
-    print("All test cases passed!")
-
-if __name__ == "__main__":
-    test_word_search() 
+    print("All test cases passed!") 
