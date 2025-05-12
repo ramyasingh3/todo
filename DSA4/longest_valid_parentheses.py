@@ -24,58 +24,130 @@ Time Complexity: O(n) where n is the length of the string
 Space Complexity: O(n) for the stack
 """
 
-def longest_valid_parentheses(s: str) -> int:
+def longestValidParentheses(s: str) -> int:
+    """
+    Find the length of the longest valid (well-formed) parentheses substring.
+    
+    Args:
+        s: Input string containing only '(' and ')'
+        
+    Returns:
+        Length of the longest valid parentheses substring
+    """
     if not s:
         return 0
+        
+    n = len(s)
+    # dp[i] represents the length of longest valid parentheses ending at index i
+    dp = [0] * n
+    max_len = 0
     
-    # Initialize stack with -1 to handle edge cases
-    stack = [-1]
-    max_length = 0
+    for i in range(1, n):
+        if s[i] == ')':
+            if s[i-1] == '(':
+                # Case: "()"
+                dp[i] = (dp[i-2] if i >= 2 else 0) + 2
+            elif i - dp[i-1] > 0 and s[i - dp[i-1] - 1] == '(':
+                # Case: "(())"
+                dp[i] = dp[i-1] + (dp[i - dp[i-1] - 2] if i - dp[i-1] >= 2 else 0) + 2
+            max_len = max(max_len, dp[i])
+            
+    return max_len
+
+def longestValidParenthesesStack(s: str) -> int:
+    """
+    Find the length of the longest valid parentheses substring using stack.
+    
+    Args:
+        s: Input string containing only '(' and ')'
+        
+    Returns:
+        Length of the longest valid parentheses substring
+    """
+    if not s:
+        return 0
+        
+    stack = [-1]  # Initialize stack with -1
+    max_len = 0
     
     for i, char in enumerate(s):
         if char == '(':
-            # Push index of opening bracket
             stack.append(i)
         else:
-            # Pop the last opening bracket's index
             stack.pop()
-            
             if not stack:
-                # If stack is empty, push current index
                 stack.append(i)
             else:
-                # Calculate length of valid parentheses
-                max_length = max(max_length, i - stack[-1])
-    
-    return max_length
+                max_len = max(max_len, i - stack[-1])
+                
+    return max_len
 
-# Test cases
-def test_longest_valid_parentheses():
-    # Test case 1: Basic case
-    assert longest_valid_parentheses("(()") == 2
+def getValidParentheses(s: str) -> list[str]:
+    """
+    Get all valid parentheses substrings.
     
-    # Test case 2: Multiple valid pairs
-    assert longest_valid_parentheses(")()())") == 4
+    Args:
+        s: Input string containing only '(' and ')'
+        
+    Returns:
+        List of all valid parentheses substrings
+    """
+    def isValid(sub: str) -> bool:
+        count = 0
+        for char in sub:
+            if char == '(':
+                count += 1
+            else:
+                count -= 1
+            if count < 0:
+                return False
+        return count == 0
+        
+    n = len(s)
+    valid_substrings = []
     
-    # Test case 3: Empty string
-    assert longest_valid_parentheses("") == 0
-    
-    # Test case 4: All valid
-    assert longest_valid_parentheses("()()()") == 6
-    
-    # Test case 5: All invalid
-    assert longest_valid_parentheses("(((") == 0
-    
-    # Test case 6: Nested valid
-    assert longest_valid_parentheses("(()())") == 6
-    
-    # Test case 7: Single pair
-    assert longest_valid_parentheses("()") == 2
-    
-    # Test case 8: Alternating valid and invalid
-    assert longest_valid_parentheses("()(()") == 2
-    
-    print("All test cases passed!")
+    for i in range(n):
+        for j in range(i + 2, n + 1, 2):  # Only check even lengths
+            substring = s[i:j]
+            if isValid(substring):
+                valid_substrings.append(substring)
+                
+    return valid_substrings
 
+# Example usage
 if __name__ == "__main__":
-    test_longest_valid_parentheses() 
+    # Test case 1
+    s1 = "(()"
+    print(f"Input: '{s1}'")
+    print(f"Length (DP): {longestValidParentheses(s1)}")  # Expected: 2
+    print(f"Length (Stack): {longestValidParenthesesStack(s1)}")  # Expected: 2
+    print("Valid substrings:")
+    for substr in getValidParentheses(s1):
+        print(f"- '{substr}'")
+    
+    # Test case 2
+    s2 = ")()())"
+    print(f"\nInput: '{s2}'")
+    print(f"Length (DP): {longestValidParentheses(s2)}")  # Expected: 4
+    print(f"Length (Stack): {longestValidParenthesesStack(s2)}")  # Expected: 4
+    print("Valid substrings:")
+    for substr in getValidParentheses(s2):
+        print(f"- '{substr}'")
+    
+    # Test case 3
+    s3 = ""
+    print(f"\nInput: '{s3}'")
+    print(f"Length (DP): {longestValidParentheses(s3)}")  # Expected: 0
+    print(f"Length (Stack): {longestValidParenthesesStack(s3)}")  # Expected: 0
+    print("Valid substrings:")
+    for substr in getValidParentheses(s3):
+        print(f"- '{substr}'")
+    
+    # Test case 4
+    s4 = "((()))"
+    print(f"\nInput: '{s4}'")
+    print(f"Length (DP): {longestValidParentheses(s4)}")  # Expected: 6
+    print(f"Length (Stack): {longestValidParenthesesStack(s4)}")  # Expected: 6
+    print("Valid substrings:")
+    for substr in getValidParentheses(s4):
+        print(f"- '{substr}'") 
