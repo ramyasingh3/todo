@@ -40,7 +40,6 @@ def lengthOfLIS(nums: list[int]) -> int:
         return 0
         
     n = len(nums)
-    # dp[i] represents the length of LIS ending at index i
     dp = [1] * n
     
     for i in range(1, n):
@@ -53,7 +52,6 @@ def lengthOfLIS(nums: list[int]) -> int:
 def lengthOfLISBinarySearch(nums: list[int]) -> int:
     """
     Find the length of the longest strictly increasing subsequence using binary search.
-    More efficient approach with O(n log n) time complexity.
     
     Args:
         nums: List of integers
@@ -64,24 +62,11 @@ def lengthOfLISBinarySearch(nums: list[int]) -> int:
     if not nums:
         return 0
         
-    # sub[i] represents the smallest possible tail value for all increasing subsequences of length i+1
     sub = []
-    
     for num in nums:
-        # Find the first element in sub that is greater than or equal to num
-        i = 0
-        j = len(sub)
-        while i < j:
-            mid = (i + j) // 2
-            if sub[mid] < num:
-                i = mid + 1
-            else:
-                j = mid
-                
-        # If num is greater than all elements in sub, append it
+        i = bisect.bisect_left(sub, num)
         if i == len(sub):
             sub.append(num)
-        # Otherwise, replace the first element that is greater than or equal to num
         else:
             sub[i] = num
             
@@ -102,7 +87,7 @@ def getLIS(nums: list[int]) -> list[int]:
         
     n = len(nums)
     dp = [1] * n
-    prev = [-1] * n  # To keep track of the previous element in the subsequence
+    prev = [-1] * n
     
     for i in range(1, n):
         for j in range(i):
@@ -122,32 +107,80 @@ def getLIS(nums: list[int]) -> list[int]:
         
     return list(reversed(lis))
 
+def getAllIncreasingSubsequences(nums: list[int]) -> list[list[int]]:
+    """
+    Get all increasing subsequences.
+    
+    Args:
+        nums: List of integers
+        
+    Returns:
+        List of all increasing subsequences
+    """
+    def isIncreasing(sub: list[int]) -> bool:
+        return all(sub[i] < sub[i+1] for i in range(len(sub)-1))
+        
+    def generateSubsequences(nums: list[int]) -> list[list[int]]:
+        n = len(nums)
+        subsequences = []
+        
+        for i in range(1, 1 << n):
+            sub = []
+            for j in range(n):
+                if i & (1 << j):
+                    sub.append(nums[j])
+            subsequences.append(sub)
+            
+        return subsequences
+        
+    # Generate all subsequences
+    subs = generateSubsequences(nums)
+    
+    # Filter increasing subsequences
+    increasing_subs = [sub for sub in subs if isIncreasing(sub)]
+    
+    return sorted(increasing_subs, key=len, reverse=True)
+
 # Example usage
 if __name__ == "__main__":
+    import bisect
+    
     # Test case 1
     nums1 = [10, 9, 2, 5, 3, 7, 101, 18]
     print(f"Input: {nums1}")
-    print(f"Length of LIS (DP): {lengthOfLIS(nums1)}")  # Expected: 4
-    print(f"Length of LIS (Binary Search): {lengthOfLISBinarySearch(nums1)}")  # Expected: 4
+    print(f"Length (DP): {lengthOfLIS(nums1)}")  # Expected: 4
+    print(f"Length (Binary Search): {lengthOfLISBinarySearch(nums1)}")  # Expected: 4
     print(f"LIS: {getLIS(nums1)}")  # Expected: [2, 5, 7, 101]
+    print("All increasing subsequences:")
+    for sub in getAllIncreasingSubsequences(nums1):
+        print(f"- {sub}")
     
     # Test case 2
     nums2 = [0, 1, 0, 3, 2, 3]
     print(f"\nInput: {nums2}")
-    print(f"Length of LIS (DP): {lengthOfLIS(nums2)}")  # Expected: 4
-    print(f"Length of LIS (Binary Search): {lengthOfLISBinarySearch(nums2)}")  # Expected: 4
+    print(f"Length (DP): {lengthOfLIS(nums2)}")  # Expected: 4
+    print(f"Length (Binary Search): {lengthOfLISBinarySearch(nums2)}")  # Expected: 4
     print(f"LIS: {getLIS(nums2)}")  # Expected: [0, 1, 2, 3]
+    print("All increasing subsequences:")
+    for sub in getAllIncreasingSubsequences(nums2):
+        print(f"- {sub}")
     
     # Test case 3
     nums3 = [7, 7, 7, 7, 7, 7, 7]
     print(f"\nInput: {nums3}")
-    print(f"Length of LIS (DP): {lengthOfLIS(nums3)}")  # Expected: 1
-    print(f"Length of LIS (Binary Search): {lengthOfLISBinarySearch(nums3)}")  # Expected: 1
+    print(f"Length (DP): {lengthOfLIS(nums3)}")  # Expected: 1
+    print(f"Length (Binary Search): {lengthOfLISBinarySearch(nums3)}")  # Expected: 1
     print(f"LIS: {getLIS(nums3)}")  # Expected: [7]
+    print("All increasing subsequences:")
+    for sub in getAllIncreasingSubsequences(nums3):
+        print(f"- {sub}")
     
     # Test case 4
     nums4 = [1, 3, 6, 7, 9, 4, 10, 5, 6]
     print(f"\nInput: {nums4}")
-    print(f"Length of LIS (DP): {lengthOfLIS(nums4)}")  # Expected: 6
-    print(f"Length of LIS (Binary Search): {lengthOfLISBinarySearch(nums4)}")  # Expected: 6
-    print(f"LIS: {getLIS(nums4)}")  # Expected: [1, 3, 6, 7, 9, 10] 
+    print(f"Length (DP): {lengthOfLIS(nums4)}")  # Expected: 6
+    print(f"Length (Binary Search): {lengthOfLISBinarySearch(nums4)}")  # Expected: 6
+    print(f"LIS: {getLIS(nums4)}")  # Expected: [1, 3, 6, 7, 9, 10]
+    print("All increasing subsequences:")
+    for sub in getAllIncreasingSubsequences(nums4):
+        print(f"- {sub}") 
