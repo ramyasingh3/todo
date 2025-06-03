@@ -1,11 +1,9 @@
 from typing import Optional
-from dataclasses import dataclass
 
-@dataclass
 class ListNode:
-    """Node class for Linked List"""
-    val: int
-    next: Optional['ListNode'] = None
+    def __init__(self, val: int = 0, next: Optional['ListNode'] = None):
+        self.val = val
+        self.next = next
 
 def reverse_list(head: Optional[ListNode]) -> Optional[ListNode]:
     """
@@ -33,42 +31,48 @@ def reverse_list(head: Optional[ListNode]) -> Optional[ListNode]:
     
     return prev
 
-def print_list(head: Optional[ListNode]) -> None:
-    """Print the linked list"""
-    current = head
+def print_list(head: Optional[ListNode]) -> str:
+    """Helper function to print linked list"""
     values = []
+    current = head
     while current:
         values.append(str(current.val))
         current = current.next
-    print(" -> ".join(values) + " -> None")
+    return "->".join(values) if values else "None"
 
 # Example usage
 if __name__ == "__main__":
-    # Test case 1: 1->2->3->4->5
-    print("Test case 1:")
+    # Test case 1: Basic case
     head1 = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
-    print("Original list:")
-    print_list(head1)
-    
+    print("Test case 1:")
+    print(f"Original list: {print_list(head1)}")
     reversed_head1 = reverse_list(head1)
-    print("Reversed list:")
-    print_list(reversed_head1)
+    print(f"Reversed list: {print_list(reversed_head1)}")
     
-    # Test case 2: 1->2
-    print("\nTest case 2:")
+    # Test case 2: Two nodes
     head2 = ListNode(1, ListNode(2))
-    print("Original list:")
-    print_list(head2)
-    
+    print("\nTest case 2:")
+    print(f"Original list: {print_list(head2)}")
     reversed_head2 = reverse_list(head2)
-    print("Reversed list:")
-    print_list(reversed_head2)
+    print(f"Reversed list: {print_list(reversed_head2)}")
     
-    # Test case 3: Empty list
+    # Test case 3: Single node
+    head3 = ListNode(1)
     print("\nTest case 3:")
-    head3 = None
-    print("Original list: None")
-    
+    print(f"Original list: {print_list(head3)}")
     reversed_head3 = reverse_list(head3)
-    print("Reversed list:")
-    print_list(reversed_head3) 
+    print(f"Reversed list: {print_list(reversed_head3)}")
+    
+    # Test case 4: Empty list
+    head4 = None
+    print("\nTest case 4:")
+    print(f"Original list: {print_list(head4)}")
+    reversed_head4 = reverse_list(head4)
+    print(f"Reversed list: {print_list(reversed_head4)}")
+    
+    # Test case 5: Longer list
+    head5 = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ListNode(6))))))
+    print("\nTest case 5:")
+    print(f"Original list: {print_list(head5)}")
+    reversed_head5 = reverse_list(head5)
+    print(f"Reversed list: {print_list(reversed_head5)}") 
