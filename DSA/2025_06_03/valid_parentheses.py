@@ -8,69 +8,64 @@ def is_valid(s: str) -> bool:
         s: String containing only '(', ')', '{', '}', '[' and ']'
         
     Returns:
-        True if the input string is valid, False otherwise
+        True if the string has valid parentheses, False otherwise
         
     Example:
         >>> is_valid("()")
         True
-        >>> is_valid("()[]{}")
-        True
-        >>> is_valid("(]")
+        >>> is_valid("([)]")
         False
     """
-    # Map of closing brackets to their corresponding opening brackets
-    brackets: Dict[str, str] = {
-        ')': '(',
-        '}': '{',
-        ']': '['
-    }
-    
     # Stack to keep track of opening brackets
     stack = []
     
-    for char in s:
-        # If it's an opening bracket, push to stack
-        if char in '({[':
-            stack.append(char)
-        # If it's a closing bracket
-        elif char in ')}]':
-            # If stack is empty or top of stack doesn't match
-            if not stack or stack[-1] != brackets[char]:
-                return False
-            # Pop the matching opening bracket
-            stack.pop()
+    # Dictionary to map closing brackets to their corresponding opening brackets
+    brackets = {')': '(', '}': '{', ']': '['}
     
-    # Stack should be empty for valid string
+    for char in s:
+        if char in '({[':  # Opening bracket
+            stack.append(char)
+        elif char in ')}]':  # Closing bracket
+            if not stack or stack.pop() != brackets[char]:
+                return False
+    
+    # Stack should be empty if all brackets are matched
     return len(stack) == 0
 
 # Example usage
 if __name__ == "__main__":
     # Test case 1: Simple valid case
     s1 = "()"
-    print(f"Input: {s1}")
+    print("Test case 1:")
+    print(f"Input: s = {s1}")
     print(f"Output: {is_valid(s1)}")
-    print(f"Explanation: Valid because each opening bracket has a matching closing bracket")
     
-    # Test case 2: Multiple types of brackets
-    s2 = "()[]{}"
-    print(f"\nInput: {s2}")
+    # Test case 2: Nested valid case
+    s2 = "({[]})"
+    print("\nTest case 2:")
+    print(f"Input: s = {s2}")
     print(f"Output: {is_valid(s2)}")
-    print(f"Explanation: Valid because each opening bracket has a matching closing bracket")
     
     # Test case 3: Invalid case
-    s3 = "(]"
-    print(f"\nInput: {s3}")
+    s3 = "([)]"
+    print("\nTest case 3:")
+    print(f"Input: s = {s3}")
     print(f"Output: {is_valid(s3)}")
-    print(f"Explanation: Invalid because the closing bracket ']' doesn't match the opening bracket '('")
     
-    # Test case 4: Nested brackets
-    s4 = "([{}])"
-    print(f"\nInput: {s4}")
+    # Test case 4: Empty string
+    s4 = ""
+    print("\nTest case 4:")
+    print(f"Input: s = {s4}")
     print(f"Output: {is_valid(s4)}")
-    print(f"Explanation: Valid because the brackets are properly nested")
     
     # Test case 5: Unmatched opening bracket
-    s5 = "("
-    print(f"\nInput: {s5}")
+    s5 = "({["
+    print("\nTest case 5:")
+    print(f"Input: s = {s5}")
     print(f"Output: {is_valid(s5)}")
-    print(f"Explanation: Invalid because there is an unmatched opening bracket") 
+    
+    # Test case 6: Unmatched closing bracket
+    s6 = ")}]"
+    print("\nTest case 6:")
+    print(f"Input: s = {s6}")
+    print(f"Output: {is_valid(s6)}") 
