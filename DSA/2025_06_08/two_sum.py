@@ -1,4 +1,4 @@
-# Two Sum Implementation
+# Two Sum
 def two_sum(nums, target):
     seen = {}
     for i, num in enumerate(nums):
@@ -8,7 +8,4 @@ def two_sum(nums, target):
         seen[num] = i
     return []
 
-if __name__ == "__main__":
-    nums = [2, 7, 11, 15]
-    target = 9
-    print(two_sum(nums, target)) 
+print(two_sum([2,7,11,15], 9))

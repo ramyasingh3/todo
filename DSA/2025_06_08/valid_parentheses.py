@@ -1,4 +1,4 @@
-# Valid Parentheses Implementation
+# Valid Parentheses
 def is_valid(s):
     stack = []
     brackets = {')': '(', '}': '{', ']': '['}
@@ -10,6 +10,4 @@ def is_valid(s):
                 return False
     return len(stack) == 0
 
-if __name__ == "__main__":
-    s = "()[]{}"
-    print(is_valid(s)) 
+print(is_valid('()[]{}'))
