@@ -10,4 +10,4 @@ def is_valid(s):
                 return False
     return len(stack) == 0
 
-print(is_valid('()[]{}')) 
+print(is_valid('()[]{}'))
