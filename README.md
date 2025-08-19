@@ -2,6 +2,8 @@
 
 A simple command-line todo list application written in Python.
 
+This repository contains a small CLI tool and supporting modules. Recent updates focus on general maintenance, documentation polish, and minor refactors to keep things tidy and easy to run.
+
 ## Features
 
 - Create new todos with title and description
@@ -47,6 +49,8 @@ The project follows a simple layered architecture:
 - `todo_repository.py`: Handles data persistence
 - `todo_service.py`: Contains business logic
 - `main.py`: Command-line interface
+
+Contributions: If you notice an opportunity for a small improvement (docs, tests, or code clarity), feel free to open an issue or a PR.
 
 ## Testing
 
